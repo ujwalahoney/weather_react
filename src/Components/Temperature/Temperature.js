@@ -23,13 +23,12 @@ class  Temperature extends Component{
     {
         return(
             <div>
-                {this.props.temperatureInfo.temperatureInKelvin}
                 <button id="F" className="btn btn-success" onClick={this.findTemp}>F</button>
                 <button id="C" className="btn btn-danger" onClick={this.findFah}>C</button>
             <h1>{ 
-                (this.props.units ==="F")?
-            ( this.props.temperatureInfo.temperatureInKelvin):
-            (this.props.temperatureInfo.temperatureInKelvin*18+32)
+                (this.props.units ==="C")?
+            ( this.props.temperatureInfo.temperatureInKelvin+"°C"):
+            (this.props.temperatureInfo.temperatureInKelvin*(9/5)+32).toFixed(2)+"°F"
                  }</h1>
         </div>
         );

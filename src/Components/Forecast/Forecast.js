@@ -8,7 +8,7 @@ class Forecast extends React.Component
     }
     come()
     {
-        this.props.get(this.props.dayInfo.maxTemp);
+        this.props.get(this.props.dayInfo.maxTemp,this.props.dayInfo.day);
     }
   
     render()
@@ -18,8 +18,8 @@ class Forecast extends React.Component
             <button className="btn btn-primary" onClick={this.come}>
             <div className="row">
   <div className="col-sm-4">{this.props.dayInfo.day}</div>
-  <div className="col-sm-4"> {this.props.dayInfo.maxTemp} </div>
-  <div className="col-sm-4">{this.props.dayInfo.minTemp}</div>
+  <div className="col-sm-4"> {(this.props.units=='C')?(this.props.dayInfo.maxTemp+"°C"):(this.props.dayInfo.maxTemp*(9/5)+32).toFixed(2)+"°F"} </div>
+  <div className="col-sm-4">{(this.props.units=='C')?(this.props.dayInfo.minTemp+"°C"):(this.props.dayInfo.minTemp*(9/5)+32).toFixed(2)+"°F"}</div>
   
 </div>
 

@@ -19,7 +19,7 @@ class App extends Component {
         day:'',
         weather:'',
       },
-      unit:'F',
+      unit:'C',
       temperature:{
         imgUrl:'',
         temperatureInKelvin:100
@@ -27,6 +27,7 @@ class App extends Component {
       },
       twd:
       {
+        day:'',
         pressure:'80%',
         humidity:'69%',
         precipitation:'5mph'
@@ -38,6 +39,7 @@ class App extends Component {
     this.updateCityName = this.updateCityName.bind(this);
     this.getTemp = this.getTemp.bind(this);
     this.changeUnit = this.changeUnit.bind(this);
+    this.TWD;
   }
   updateCityName(value)
   {
@@ -70,7 +72,7 @@ class App extends Component {
 
   // Build day wise map
   data.list.forEach(date => {
-    // console.log(date);
+    //  console.log(date);
     const dateValue = new Date(date.dt * 1000);
     const dayNum = dateValue.getDay();
     if (dayNum in this.dayWiseMap) {
@@ -90,9 +92,13 @@ class App extends Component {
   });
 
   //console.log(sortedMap);
+  let maxPress=0;
 
   const forecastInfo = _.map(sortedMap, (obj) => {
     const minTemp = _.reduce(obj.map(interval => interval.main.temp_min), (a, b) => a + b) / obj.length;
+    const pres = _.reduce(obj.map(interval => interval.main.pressure), (a, b) => a + b) / obj.length;
+maxPress = (maxPress<pres)?pres:maxPress;
+    
     return {
       day: moment(obj[0].dt * 1000).format("ddd"),
       minTemp: _.round(minTemp - 270, 2),
@@ -100,6 +106,23 @@ class App extends Component {
       dayNum: new Date(obj[0].dt * 1000).getDay()
     }
   });
+   this.TWD = _.map(sortedMap, (obj) => {
+    const pres = _.reduce(obj.map(interval => interval.main.pressure), (a, b) => a + b) / obj.length;
+    const humi = _.reduce(obj.map(interval => interval.main.humidity), (a, b) => a + b) / obj.length;
+    
+    return {
+      day: moment(obj[0].dt * 1000).format("ddd"),      
+      pressure:((_.round(pres)/1000)*100).toFixed(2),
+      humidity:(_.round(humi))
+    }
+  });
+
+ 
+
+ 
+
+ // console.log(maxPress );
+  //console.log(TWD);
 
   this.setState({
     forecastInfo
@@ -109,8 +132,23 @@ class App extends Component {
 
      
   }
-  getTemp(e)
+  passData(d)
   {
+   var twdData = this.TWD.filter(function(data)
+  {
+    return data.day==d;
+  })
+  //console.log(twdData);
+  this.setState({
+    twd:{
+      pressure:twdData[0].pressure,
+      humidity:twdData[0].humidity
+    }
+  });
+  }
+  getTemp(e,d)
+  {
+    this.passData(d);
   this.setState({
     temperature:{
       temperatureInKelvin:e
@@ -129,7 +167,7 @@ class App extends Component {
       unit:e
     }
   );
-  console.log(this.state.temperature.unit);
+ // console.log(this.state.temperature.unit);
   }
   render() {
     return (
@@ -143,7 +181,7 @@ class App extends Component {
               {
                 this.state.forecastInfo.map(forecastEle => {
                   return (
-                    <Forecast dayInfo={forecastEle} get = {this.getTemp}/>
+                    <Forecast units={this.state.unit} dayInfo={forecastEle} get = {this.getTemp}/>
                   )
                 })
               }

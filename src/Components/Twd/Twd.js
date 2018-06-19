@@ -12,7 +12,7 @@ class Twd extends React.Component
          <div>
               <h4>Pressure:{this.props.TwdInfo.pressure}</h4>
                <h4>Humidity:{this.props.TwdInfo.humidity}</h4>
-               <h4>Precipitation:{this.props.TwdInfo.precipitation}</h4>
+            
              </div>  
         );
     }
