@@ -9,6 +9,7 @@
     "momentjs": "^2.0.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-google-charts": "^1.6.6",
     "react-moment": "^0.7.6",
     "react-scripts": "1.1.4"
   },
